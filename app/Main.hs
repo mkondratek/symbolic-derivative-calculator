@@ -1,6 +1,7 @@
 module Main where
 
-import Lib
+import Expression
 
 main :: IO ()
-main = someFunc
+main = print "Witaj Świecie"
+
