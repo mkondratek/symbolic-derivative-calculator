@@ -19,4 +19,3 @@ der (Sin u) x   = Mul (der u x) (Cos u)
 der (Cos u) x   = Neg (Mul (der u x) (Sin u))
 der (Tg u) x    = der (Div (Sin u) (Cos u)) x
 der (Ln u) x    = Mul (der u x) (Div (Val "1") u)
-

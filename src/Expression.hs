@@ -1,6 +1,7 @@
 module Expression (
   Expression(..),
-  parse
+  parse,
+  rpnToExpression
   ) where
 
 import RPNOperations
@@ -47,4 +48,19 @@ parse s = rpnToExpression (toRPN (filter (/=' ') ("(" ++ s ++ ")")) []) []
 
 instance Read Expression where
   readsPrec _ s = [(parse s, "")]
-  
+
+rpnToExpression :: [String] -> [Expression] -> Expression
+rpnToExpression [] es = head es
+rpnToExpression ("+":xs) (e:f:es) = rpnToExpression xs (Add f e : es)
+rpnToExpression ("-":xs) (e:f:es) = rpnToExpression xs (Sub f e : es)
+rpnToExpression ("/":xs) (e:f:es) = rpnToExpression xs (Div f e : es)
+rpnToExpression ("*":xs) (e:f:es) = rpnToExpression xs (Mul f e : es)
+rpnToExpression ("^":xs) (e:f:es) = rpnToExpression xs (Pow f e : es)
+rpnToExpression ("e":xs) (e:es) = rpnToExpression xs (Exp e : es)
+rpnToExpression ("s":xs) (e:es) = rpnToExpression xs (Sin e : es)
+rpnToExpression ("c":xs) (e:es) = rpnToExpression xs (Cos e : es)
+rpnToExpression ("t":xs) (e:es) = rpnToExpression xs (Tg e : es)
+rpnToExpression ("l":xs) (e:es) = rpnToExpression xs (Ln e : es)
+rpnToExpression (x:xs) es
+  | head x `elem` "1234567890" = rpnToExpression xs (Val x : es)
+  | head x `elem` "xyz" = rpnToExpression xs (Var (head x) : es)
